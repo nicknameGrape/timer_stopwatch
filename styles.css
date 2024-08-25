@@ -1,0 +1,168 @@
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	display: flex;
+}
+#modes {
+	width: 10%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+#hub {
+	height: 20%;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	background: skyBlue;
+	font-size: 5vh;
+}
+#modes {
+	background: black;
+}
+#modes img {
+	box-sizing: border-box;
+	padding: 10%;
+	width: 100%;
+	height: 40%;
+	object-fit: contain;
+}
+.mode {
+	display: none;
+	width: 90%;
+	height: 100%;
+}
+.controls {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 50%;
+	height: 100%;
+}
+.display {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50%;
+	height: 100%;
+}
+.readout {
+	display: flex:
+	justify-content: center;
+	align-items: center;
+	font-family: monospace;
+	font-weight: bolder;
+}
+.timer {
+	background: lightpink;
+}
+.stopwatch {
+	background: lightblue;
+}
+.bomb {
+	background: lightgreen;
+}
+#timer {
+	display: flex;
+}
+#keypad {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	width: 80%;
+	height: 80%;
+}
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 5vh;
+}
+#keypad_display {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	background: black;
+	border: solid black;
+	font-family: monospace;
+	font-weight: bolder;
+	font-size: 10vh;
+}
+#display_timer {
+	width: 50%;
+	height: 100%;
+	font-size: 20vh;
+}
+#stopwatch {
+}
+#stopwatch_startstop {
+	width: 80%;
+	height: 50%;
+}
+#stopwatch_reset {
+	width: 80%;
+	height: 25%;
+}
+#stopwatch_mmsshh {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 15vh;
+}
+#bomb {
+	display: none;
+}
+#bomb_usage {
+	grid-column: 1 / 3;
+	font-size: medium;
+}
+#bomb_controls {
+	display: grid;
+	grid-template: repeat(6, auto) / repeat(2, 1fr);
+	gap: 10px;
+	width: 50%;
+	margin: 5%;
+	justify-content: center;
+	font-size: 5vh;
+}
+#bomb_min_readout {
+	align-self: center;
+}
+#bomb_start {
+	grid-column: 1 / 3;
+}
+#bomb_reset {
+	grid-column: 1 / 3;
+}
+#bomb_max_controls {
+	grid-column: 2 / 3;
+	display: grid;
+	grid-template-columns: 1fr auto auto auto;
+	gap: 10px;
+	align-items: center;
+}
+.plus_minus {
+	font-family: monospace;
+}
+.align_right {
+	justify-self: right;
+	align-self: center;
+}
+#bomb_display {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.tab {
+	width: 100%;
+	aspect-ratio: 1/1;
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	font-size: 3vh;
+}

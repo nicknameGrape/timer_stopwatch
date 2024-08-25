@@ -2,124 +2,7 @@
 	<head>
 		<title>Timer/Stopwatch</title>
 		<link rel="icon" type="image/x-icon" href="timer_icon.png">
-		<style>
-body {
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	display: flex;
-}
-#modes {
-	width: 10%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-}
-#hub {
-	height: 20%;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	background: skyBlue;
-	font-size: 5vh;
-}
-#modes img {
-	box-sizing: border-box;
-	padding: 10%;
-	width: 100%;
-	height: 40%;
-	object-fit: contain;
-}
-.mode {
-	display: none;
-	width: 90%;
-	height: 100%;
-}
-.controls {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	width: 50%;
-	height: 100%;
-}
-.display {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 50%;
-	height: 100%;
-}
-.readout {
-	display: flex:
-	justify-content: center;
-	align-items: center;
-	font-family: monospace;
-	font-weight: bolder;
-}
-.timer {
-	background: lightpink;
-}
-.stopwatch {
-	background: lightblue;
-}
-.bomb {
-	background: lightgray;
-}
-#timer {
-	display: flex;
-}
-#keypad {
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	width: 80%;
-	height: 80%;
-}
-.button {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-size: 5vh;
-}
-#keypad_display {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: white;
-	background: black;
-	border: solid black;
-	font-family: monospace;
-	font-weight: bolder;
-	font-size: 10vh;
-}
-#display_timer {
-	width: 50%;
-	height: 100%;
-	font-size: 20vh;
-}
-#stopwatch {
-}
-#stopwatch_startstop {
-	width: 80%;
-	height: 50%;
-}
-#stopwatch_reset {
-	width: 80%;
-	height: 25%;
-}
-#stopwatch_mmsshh {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 15vh;
-}
-#bomb {
-}
-		</style>
+		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-C5MPB2T6KH"></script>
@@ -135,11 +18,9 @@ body {
 			<a id="hub" href="https://nicknameGrape.github.io/smartboard/">
 				<div>Back to<br>Hub</div>
 			</a>
-			<img id="tab_timer" class="timer" src="timer_icon.png" alt="timer"></img>
-			<img id="tab_stopwatch" class="stopwatch" src="stopwatch_icon.png" alt="stopwatch"></img>
-			<!--
-			<img id="tab_bomb" class="bomb" src="bomb_icon.png" alt="bomb"></img>
-			--!>
+			<img id="tab_timer" class="timer tab" src="timer_icon.png" alt="timer"></img>
+			<img id="tab_stopwatch" class="stopwatch tab" src="stopwatch_icon.png" alt="stopwatch"></img>
+			<img id="tab_bomb" class="bomb tab" src="bomb_icon.png" alt="bomb"></img>
 		</div>
 		<div id="timer" class="timer mode">
 			<div id="controls_timer" class="controls timer">
@@ -163,250 +44,28 @@ body {
 				<div id="stopwatch_mmsshh" class="readout">00:00:00</div>
 			</div>
 		</div>
-		<!--
 		<div id="bomb" class="bomb mode">
-			<div id="controls_bomb" class="controls bomb">bomb controls</div>
-			<div id="display_bomb" class="display bomb">bomb display</div>
+			<div id="bomb_controls">
+				<p id="bomb_usage">
+					The horn will sound randomly between the minimum and maximum time.
+					Use this random timer for games like "hot potato" or "musical chairs".
+				</p>
+				<span class="align_right">Min Length:</span>
+				<span id="bomb_min_readout" class="readout">5s</span>
+				<span class="align_right">Max Length:</span>
+				<div id="bomb_max_controls">
+					<span id="bomb_max_readout" class="readout">30s</span>
+					<button id="bomb_plus" class="button plus_minus">+5</button>
+					<button id="bomb_minus" class="button plus_minus">-5</button>
+					<button id="bomb_default" class="button plus_minus">30</button>
+				</div>
+				<button id="bomb_start" class="button">Start</button>
+				<button id="bomb_reset" class="button">Reset</button>
+			</div>
+			<div id="bomb_display">
+				<img id="bomb_image" src="bomb_unlit.png"></img>
+			</div>
 		</div>
-		--!>
-
 	</body>
-	<script>
-"use strict"
-
-function mmss() {
-	if (timerTime >= 0) {
-		var minutes = Math.floor(timerTime/60).toString().padStart(2, "0");
-		var seconds = Math.floor(timerTime%60).toString().padStart(2, "0");
-		return minutes + ":" + seconds;
-	} else {
-		if (performance.now()%500 > 250) {
-			return "XX:XX";
-		} else {
-			return "@@:@@";
-		}
-	}
-}
-
-function mmsshh() {
-	var minutes = Math.floor(stopwatchTime/60).toString().padStart(2, "0");
-	var seconds = Math.floor(stopwatchTime%60).toString().padStart(2, "0");
-	var hundredths = (stopwatchTime%1).toFixed(2).toString().substring(2, 4);
-	return minutes + ":" + seconds + ":" + hundredths;
-}
-
-function addInput(c) {
-	input += c;
-	input = input.slice(-4);
-	input = input.padStart(4, "0");
-	var seconds = parseInt(input.slice(2, 4));
-	var minutes = parseInt(input.slice(0, 2));
-	if (seconds > 60) {
-		minutes += 1;
-		seconds = seconds%60;
-	}
-	timerTime = minutes*60 + seconds;
-	keypad_display.innerHTML = input.slice(0, 2) + ":" + input.slice(2, 4);
-	clearTimeout(inputTimeout);
-	inputTimeout = setTimeout(function () {
-		input = "";
-	}, 3000);
-}
-
-function animateTimer(now) {
-	if (lastTime === null) {
-		lastTime = now;
-	} else {
-		var elapsed = now - lastTime;
-		timerTime -= elapsed/1000;
-		keypad_display.innerHTML = mmss();
-		display_timer.innerHTML = mmss();
-		if (timerTime < 0) {
-			display_timer.style.background = "red";
-			if (horn.canPlay === true) {
-				console.log("playing horn");
-				horn.play();
-				horn.canPlay = false;
-			}
-		}
-		lastTime = now;
-	}
-	timerAnimationRequest = requestAnimationFrame(animateTimer);
-}
-
-function animateStopwatch(now) {
-	if (lastTimeStopwatch === null) {
-		lastTimeStopwatch = now;
-	} else {
-		var elapsed = now - lastTimeStopwatch;
-		stopwatchTime += elapsed/1000;
-		stopwatch_mmsshh.innerHTML = mmsshh();
-		lastTimeStopwatch = now;
-	}
-	stopwatchAnimationRequest = requestAnimationFrame(animateStopwatch);
-}
-
-function timerReset() {
-	cancelAnimationFrame(timerAnimationRequest);
-	timerAnimationRequest = null;
-	lastTime = null;
-	clearTimeout(inputTimeout);
-	timerTime = 0;
-	keypad_display.innerHTML = mmss();
-	input = "";
-	buttonStartStop.innerHTML = "Start";
-	display_timer.innerHTML = "";
-	display_timer.style.background = "";
-	horn.pause();
-	horn.currentTime = 0;
-	horn.canPlay = true;
-}
-
-var DEFAULT_TIME = 60;
-var timerTime = DEFAULT_TIME;
-var input = "";
-var memory = "0100";
-var inputTimeout = null;
-var timerAnimationRequest = null;
-var lastTime = null;
-var stopwatchTime = 0;
-var lastTimeStopwatch = null;
-var stopwatchAnimationRequest = null;
-
-var tab_timer = document.getElementById("tab_timer");
-var timer = document.getElementById("timer");
-var keypad = document.getElementById("keypad");
-var keypad_display = document.getElementById("keypad_display");
-var button1 = document.getElementById("button1");
-var button2 = document.getElementById("button2");
-var button3 = document.getElementById("button3");
-var button4 = document.getElementById("button4");
-var button5 = document.getElementById("button5");
-var button6 = document.getElementById("button6");
-var button7 = document.getElementById("button7");
-var button8 = document.getElementById("button8");
-var button9 = document.getElementById("button9");
-var button0 = document.getElementById("button0");
-var button00 = document.getElementById("button00");
-var buttonStartStop = document.getElementById("button_startstop");
-var buttonReset = document.getElementById("button_reset");
-var horn = document.createElement("audio");
-horn.src = "air_horn.mp3";
-horn.canPlay = true;
-
-var tab_stopwatch = document.getElementById("tab_stopwatch");
-var stopwatch = document.getElementById("stopwatch");
-var stopwatch_startstop = document.getElementById("stopwatch_startstop");
-var stopwatch_mmsshh = document.getElementById("stopwatch_mmsshh");
-
-var tab_bomb = document.getElementById("tab_bomb");
-var bomb = document.getElementById("bomb");
-
-keypad_display.innerHTML = mmss();
-
-window.addEventListener("focus", function (ev) {
-	horn.canPlay = false;
-	setInterval(function () {if (timerTime > 0) {horn.canPlay = true;}}, 1000);
-});
-
-tab_timer.addEventListener("pointerdown", function (ev) {
-	stopwatch.style.display = "none";
-	//bomb.style.display = "none";
-	timer.style.display = "flex";
-});
-tab_stopwatch.addEventListener("pointerdown", function (ev) {
-	timer.style.display = "none";
-	timerReset();
-	//bomb.style.display = "none";
-	stopwatch.style.display = "flex";
-});
-//tab_bomb.addEventListener("pointerdown", function (ev) {
-//	timer.style.display = "none";
-//	timerReset();
-//	stopwatch.style.display = "none";
-//	//bomb.style.display = "flex";
-//});
-button1.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("1");
-});
-button2.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("2");
-});
-button3.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("3");
-});
-button4.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("4");
-});
-button5.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("5");
-});
-button6.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("6");
-});
-button7.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("7");
-});
-button8.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("8");
-});
-button9.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("9");
-});
-button0.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("0");
-});
-button00.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest !== null) {timerReset();} addInput("00");
-});
-buttonReset.addEventListener("pointerdown", function (ev) {
-	timerReset();
-});
-buttonStartStop.addEventListener("pointerdown", function (ev) {
-	if (timerAnimationRequest === null) {
-		timerAnimationRequest = requestAnimationFrame(animateTimer);
-		buttonStartStop.innerHTML = "Pause";
-		display_timer.innerHTML = mmss();
-		if (timerTime > 0) {
-			display_timer.style.background = "lime";
-		} else {
-			horn.currentTime = 0;
-			horn.play();
-		}
-	} else {
-		cancelAnimationFrame(timerAnimationRequest);
-		timerAnimationRequest = null;
-		lastTime = null;
-		buttonStartStop.innerHTML = "Start";
-		if (timerTime > 0) {
-			display_timer.style.background = "yellow";
-		} else {
-			horn.pause();
-		}
-	}
-});
-stopwatch_startstop.addEventListener("pointerdown", function (ev) {
-	if (stopwatchAnimationRequest === null) {
-		stopwatchAnimationRequest = requestAnimationFrame(animateStopwatch);
-		stopwatch_startstop.innerHTML = "Pause";
-		stopwatch_mmsshh.innerHTML = mmsshh();
-		stopwatch_mmsshh.style.background = "lime";
-	} else {
-		cancelAnimationFrame(stopwatchAnimationRequest);
-		stopwatchAnimationRequest = null;
-		lastTimeStopwatch = null;
-		stopwatch_startstop.innerHTML = "Start";
-		stopwatch_mmsshh.style.background = "yellow";
-	}
-});
-stopwatch_reset.addEventListener("pointerdown", function (ev) {
-	cancelAnimationFrame(stopwatchAnimationRequest);
-	stopwatchAnimationRequest = null;
-	lastTimeStopwatch = null;
-	stopwatch_startstop.innerHTML = "Start";
-	stopwatch_mmsshh.style.background = "lightBlue";
-	stopwatchTime = 0;
-	stopwatch_mmsshh.innerHTML = mmsshh();
-});
-	</script>
+	<script src="main.js"></script>
 </html>
