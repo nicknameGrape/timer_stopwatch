@@ -141,7 +141,21 @@ const buttonBombMinus = document.getElementById("bomb_minus");
 const buttonBombDefault = document.getElementById("bomb_default");
 const buttonBombStart = document.getElementById("bomb_start");
 const buttonBombReset = document.getElementById("bomb_reset");
-const imageBomb = document.getElementById("bomb_image");
+const divBombDisplay = document.getElementById("bomb_display");
+const canvasBomb = document.getElementById("bomb_canvas");
+const contextBomb = canvasBomb.getContext("2d");
+const imageBombUnlit = document.createElement("img");
+const imageBombLit1 = document.createElement("img");
+const imageBombLit2 = document.createElement("img");
+const imageBombFlower = document.createElement("img");
+imageBombUnlit.onload = function() {
+	canvasBomb.width = imageBombUnlit.width; canvasBomb.height = imageBombUnlit.height;
+	contextBomb.drawImage(imageBombUnlit, 0, 0);
+};
+imageBombUnlit.src = "bomb_unlit.png";
+imageBombLit1.src = "bomb_lit1.png";
+imageBombLit2.src = "bomb_lit2.png";
+imageBombFlower.src = "bomb_flower.png";
 let bombLightTime = null;
 let bombDuration = null;
 function animateBomb() {
@@ -149,13 +163,16 @@ function animateBomb() {
 	console.log(bombLightTime, bombDuration, elapsed);
 	if (elapsed > bombDuration) {
 		window.cancelAnimationFrame(bomb_animation_request);
-		imageBomb.src = "bomb_flower.png";
 		horn.play();
+		contextBomb.clearRect(0, 0, canvasBomb.width, canvasBomb.height);
+		contextBomb.drawImage(imageBombFlower, 0, 0);
 	} else {
 		if (elapsed%200 < 100) {
-			imageBomb.src = "bomb_lit1.png";
+			contextBomb.clearRect(0, 0, canvasBomb.width, canvasBomb.height);
+			contextBomb.drawImage(imageBombLit1, 0, 0);
 		} else {
-			imageBomb.src = "bomb_lit2.png";
+			contextBomb.clearRect(0, 0, canvasBomb.width, canvasBomb.height);
+			contextBomb.drawImage(imageBombLit2, 0, 0);
 		}
 		bomb_animation_request = window.requestAnimationFrame(animateBomb);
 	}
@@ -295,5 +312,6 @@ buttonBombStart.addEventListener("click", function (ev) {
 buttonBombReset.addEventListener("click", function (ev) {
 	window.cancelAnimationFrame(bomb_animation_request);
 	horn.pause(); horn.currentTime = 0;
-	imageBomb.src = "bomb_unlit.png";
+	contextBomb.clearRect(0, 0, canvasBomb.width, canvasBomb.height);
+	contextBomb.drawImage(imageBombUnlit, 0, 0);
 });
